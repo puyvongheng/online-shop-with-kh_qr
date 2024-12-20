@@ -1,0 +1,93 @@
+<div class="container mt-5">
+    <h2 class="text-center mb-4 text-primary">My Cart</h2>
+
+    <!-- If cart is empty -->
+    <div *ngIf="cart.length === 0" class="alert alert-warning text-center">
+        <i class="bi bi-cart-x-fill"></i> Your cart is empty.
+    </div>
+
+    <!-- Cart Items -->
+    <div *ngFor="let product of cart" class="card mb-3 shadow-lg border-0 rounded-3">
+        <div class="row g-0">
+            <div class="col-md-4">
+                <img [src]="product.image" class="img-fluid rounded-start" alt="{{ product.name }}">
+            </div>
+            <div class="col-md-8">
+                <div class="card-body">
+                    <h5 class="card-title">{{ product.name }}</h5>
+                    <p class="card-text">Price: ${{ product.price }}</p>
+                    <button class="btn btn-danger shadow-sm" (click)="removeFromCart(product)">
+                        <i class="bi bi-trash"></i> Remove
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Total Price -->
+    <div *ngIf="cart.length > 0" class="text-center mt-3">
+        <h4 class="text-success">Total Price: ${{ totalPrice }}</h4>
+    </div>
+
+    <!-- Payment Section -->
+    <div *ngIf="cart.length > 0" class="text-center mt-4 p-4 shadow-lg rounded-3 bg-light">
+        <p class="text-muted">Select your payment details</p>
+
+        <!-- Hidden form fields for hidden info -->
+        <input type="text" [(ngModel)]="bank_account" class="form-control" placeholder="Bank Account" [hidden]="true">
+        <input type="text" [(ngModel)]="merchant_name" class="form-control" placeholder="Merchant Name" [hidden]="true">
+        <input type="text" [(ngModel)]="merchant_city" class="form-control" placeholder="Merchant City"
+            value="Phnom Penh" [hidden]="true">
+
+        <!-- Currency selection -->
+        <div class="d-flex justify-content-center align-items-center mb-3">
+            <label for="currency" class="me-3">Currency: </label>
+            <select id="currency" class="form-select" [(ngModel)]="currency" (change)="convertCurrency()">
+                <option value="USD">USD</option>
+                <option value="KHR">KHR</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <p>The price in {{ currency }} is: {{ amount }} {{ currency }}</p>
+        </div>
+
+        <input type="text" [(ngModel)]="bill_number" class="form-control mb-3" placeholder="Bill Number"
+            value="TRX123456">
+
+        <!-- Static QR option -->
+        <div class="form-check mb-3">
+            <input type="checkbox" class="form-check-input" [(ngModel)]="static" id="staticQR">
+            <label class="form-check-label" for="staticQR">Static QR</label>
+        </div>
+
+        <!-- Submit Payment Button -->
+        <button class="btn btn-success w-100 shadow-lg" (click)="generateQR()">
+            <i class="bi bi-credit-card"></i> Submit Payment
+        </button>
+    </div>
+
+    <!-- Show QR code with loading status while generating -->
+    <div *ngIf="isGenerating" class="text-center mt-4">
+        <nz-qrcode nzValue="https://ng.ant.design/" nzStatus="loading" class="loading-qrcode"></nz-qrcode>
+    </div>
+
+    <!-- Show generated QR code once data is available -->
+    <div *ngIf="qr && !isGenerating" class="text-center mt-4">
+        <nz-qrcode [nzValue]="qr"
+            nzIcon="https://img.alicdn.com/imgextra/i2/O1CN01TBIkzL1Nk3IBB0DLA_!!6000000001607-2-tps-106-120.png"
+            nzLevel="H"></nz-qrcode>
+    </div>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+<br>

@@ -1,0 +1,66 @@
+<div class="container my-4">
+    <div class="row">
+        <!-- Display products -->
+        <div *ngFor="let product of products" class="col-6 col-md-3 mb-4">
+            <div class="card" (click)="openDrawer(product)">
+                <img [src]="product.thumbnail[0]" class="card-img-top" alt="{{ product.name }}" />
+                <div class="card-body">
+                    <h5 class="card-title">{{ product.name }}</h5>
+                    <p class="card-text">Price: ${{ product.price }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Drawer -->
+<nz-drawer [nzHeight]="400" [nzClosable]="true" [nzVisible]="visible" nzPlacement="bottom"
+    nzTitle="{{ selectedProduct?.name }}" (nzOnClose)="closeDrawer()">
+
+    <ng-container *nzDrawerContent>
+        <div *ngIf="selectedProduct">
+
+
+            <div class="d-flex align-items-center">
+                <img [src]="selectedProduct.thumbnail[0]" alt="{{ selectedProduct.name }}" class="img-thumbnail me-3"
+                    style="width: 100px; height: 100px;" />
+                <div>
+                    <h5>{{ selectedProduct.name }}</h5>
+                    <p>Price: ${{ selectedProduct.price }}</p>
+                    <p>{{ selectedProduct.description }}</p>
+                </div>
+            </div>
+
+
+            <hr />
+
+            <!-- Display Variants -->
+            <h6>Variants</h6>
+            <div class="d-flex flex-column gap-3">
+                <div *ngFor="let variant of selectedProduct.variants"
+                    class="d-flex align-items-center p-3 border rounded">
+
+
+                    <img width="100px" height="100" nz-image class="img-thumbnail me-3" [nzSrc]="variant.images[0]"
+                        alt="{{ variant.color }}" />
+
+
+
+                    <div class="flex-grow-1">
+                        <p>-{{ variant.size }} - {{ variant.color }}</p>
+                        <p>Price: ${{ variant.price }}</p>
+                        <p>Stock: {{ variant.stock }}</p>
+                    </div>
+
+                    <button class="btn btn-primary" [disabled]="variant.stock === 0" (click)="addToCart(variant)">
+                        {{ variant.stock > 0 ? 'Add ' : 'Out of Stock' }}
+                    </button>
+
+
+                </div>
+            </div>
+
+
+        </div>
+    </ng-container>
+</nz-drawer>

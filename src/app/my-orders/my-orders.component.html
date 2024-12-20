@@ -1,0 +1,59 @@
+<div class="container mt-4">
+    <div class="row">
+        <!-- Loop through each order -->
+        <div *ngFor="let order of orders; let i = index" class="col-md-6 col-lg-4 mb-4">
+            <!-- Order Card -->
+            <div class="card shadow-sm">
+                <!-- Order Summary -->
+                <div (click)="toggleOrderDetails(i)" class="card-body cursor-pointer">
+                    <h5 class="card-title">Order #{{ order.id }}</h5>
+                    <p class="card-text">
+                        Status:
+                        <span class="badge"
+                            [ngClass]="{'bg-success': order.status === 'completed', 'bg-warning': order.status === 'pending'}">
+                            {{ order.status }}
+                        </span>
+                    </p>
+                    <p class="card-text"><strong>Total Price:</strong> {{ getTotalPrice(order) | currency }}</p>
+                </div>
+
+                <!-- Order Details (Initially hidden) -->
+                <div *ngIf="selectedOrderIndex === i" class="card-footer bg-light">
+                    <p><strong>Bill Number:</strong> {{ order.bill_number || 'Not available' }}</p>
+                    <p><strong>QR Code:</strong></p>
+                    <img *ngIf="order.qr" [src]="order.qr" alt="QR Code" width="100" class="d-block mb-3">
+                    <p *ngIf="!order.qr">QR Code not available</p>
+                    <p><strong>MD5:</strong> {{ order.md5 || 'Not available' }} </p>
+
+                    > {{Status}}
+
+                    <br>
+                    >
+                    {{Statuslist}}
+
+
+                    <!-- Loop through order items and display them -->
+                    <ul class="list-group list-group-flush">
+                        <li *ngFor="let item of getOrderItems(order)"
+                            class="list-group-item d-flex justify-content-between align-items-center">
+                            <span>{{ item.name }}</span>
+                            <span class="badge bg-primary">{{ item.price | currency }}</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+<!-- Clear All Orders Button -->
+<button (click)="clearAllOrders()" class="btn btn-danger mt-3">Clear All Orders</button>
